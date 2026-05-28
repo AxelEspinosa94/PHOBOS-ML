@@ -1,0 +1,89 @@
+# ============================
+# C / CML build artifacts
+# ============================
+*.o
+*.a
+*.so
+*.dll
+*.dylib
+*.out
+*.exe
+*.obj
+*.lib
+*.pch
+*.pdb
+*.mod
+*.gcno
+*.gcda
+*.gcov
+
+# Build directory
+build/
+bin/
+dist/
+
+# ============================
+# Make / CMake
+# ============================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# ============================
+# Python bindings
+# ============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.env
+.venv
+venv/
+env/
+
+# Virtual environment folders
+ENV/
+env.bak/
+
+# ============================
+# Java / JNI / Spark
+# ============================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle
+.gradle/
+build/
+
+# Java class files
+*.class
+
+# JNI generated headers
+*.h
+
+# ============================
+# VSCode / Editor
+# ============================
+.vscode/
+*.code-workspace
+
+# ============================
+# OS / System files
+# ============================
+.DS_Store
+Thumbs.db
+
+# ============================
+# Logs
+# ============================
+*.log
+logs/
