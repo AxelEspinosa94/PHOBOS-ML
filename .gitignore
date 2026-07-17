@@ -28,7 +28,7 @@ dist/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
+#Makefile
 *.cmake
 
 # ============================
