@@ -18,7 +18,7 @@
 *.gcov
 
 # Build directory
-build/
+#build/
 bin/
 dist/
 
