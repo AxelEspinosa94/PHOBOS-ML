@@ -18,7 +18,8 @@
 *.gcov
 
 # Build directory
-build/
+build/*
+!build/.gitkeep
 bin/
 dist/
 
