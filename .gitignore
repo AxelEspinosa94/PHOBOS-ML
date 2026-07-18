@@ -68,8 +68,6 @@ build/
 # Java class files
 *.class
 
-# JNI generated headers
-*.h
 
 # ============================
 # VSCode / Editor
