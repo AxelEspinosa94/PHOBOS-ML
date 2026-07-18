@@ -11,3 +11,6 @@ $(OUT): $(SRC)
 
 clean:
 	rm -rf build/*
+
+format:
+	clang-format -i src/*.c include/*.h
