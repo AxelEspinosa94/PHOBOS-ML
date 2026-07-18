@@ -17,3 +17,7 @@ jobs:
 
       - name: Build project
         run: make
+
+      - name: Check formatting
+        run: clang-format --dry-run --Werror src/*.c include/*.h
+
