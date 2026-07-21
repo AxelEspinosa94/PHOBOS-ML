@@ -35,3 +35,10 @@ jobs:
       - name: Run tests
         run: ./build/test_tensor
 
+      - name: Debug clang-format
+        run: |
+          pwd
+          ls -a
+          ls -a ..
+
+
