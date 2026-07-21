@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install clang-format
+        run: sudo apt-get install -y clang-format-18.1.3
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -19,7 +22,7 @@ jobs:
         run: make
 
       - name: Check formatting
-        run: clang-format --dry-run --Werror src/*.c include/*.h
+        run: clang-format-18.1.3 --dry-run --Werror src/*.c include/*.h
       
       - name: Check header compiles standalone
         run: |
