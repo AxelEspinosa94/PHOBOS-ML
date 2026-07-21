@@ -58,7 +58,7 @@ $(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
 # Formatting
 # ================================
 format:
-	clang-format -i $(SRC_DIR)/*.c $(TEST_DIR)/*.c $(INC_DIR)/*.h
+	clang-format-18.1.3 -i $(SRC_DIR)/*.c $(TEST_DIR)/*.c $(INC_DIR)/*.h
 
 # ================================
 # Clean
