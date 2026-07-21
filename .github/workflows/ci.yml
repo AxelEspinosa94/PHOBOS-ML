@@ -20,4 +20,15 @@ jobs:
 
       - name: Check formatting
         run: clang-format --dry-run --Werror src/*.c include/*.h
+      
+      - name: Check header compiles standalone
+        run: |
+          echo "#include \"tensor.h\"" > src/test_header.c
+          gcc -c src/test_header.c -Iinclude
+      
+      - name: Build tests
+        run: make build/test_tensor
+
+      - name: Run tests
+        run: ./build/test_tensor
 
