@@ -26,6 +26,7 @@ jobs:
 
       - name: Check formatting
         run: |
+          clang-format-18 -style=file:.clang-format -dump-config
           clang-format-18 -style=file:.clang-format --dry-run --Werror \
             src/*.c include/*.h tests/*.c
 
