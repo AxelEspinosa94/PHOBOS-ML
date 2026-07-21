@@ -21,8 +21,11 @@ jobs:
       - name: Build project
         run: make
 
+      - name: Move .clang-format to workspace root
+        run: cp PHOBOS-ML/.clang-format .
+
       - name: Check formatting
-        run: clang-format-18 -style=file --dry-run --Werror src/*.c include/*.h tests/*.c
+        run: clang-format-18 -style=file --dry-run --Werror PHOBOS-ML/src/*.c PHOBOS-ML/include/*.h PHOBOS-ML/tests/*.c
       
       - name: Check header compiles standalone
         run: |
