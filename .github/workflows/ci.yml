@@ -21,8 +21,8 @@ jobs:
       - name: Build project
         run: make
 
-      #- name: Check formatting
-      #  run: clang-format-18 --dry-run --Werror src/*.c include/*.h
+      - name: Check formatting
+        run: clang-format-18 -style=file --dry-run --Werror src/*.c include/*.h tests/*.c
       
       - name: Check header compiles standalone
         run: |
