@@ -1,9 +1,9 @@
 #ifndef PHOBOSML_TENSOR_H
 #define PHOBOSML_TENSOR_H
 
+#include <stdbool.h>  // bool
 #include <stddef.h>   // size_t
 #include <stdint.h>   // uint32_t, uint64_t
-#include <stdbool.h>  // bool
 
 /**
  * @file tensor.h
@@ -54,14 +54,14 @@ typedef enum {
  * Strides are expressed in **bytes**, not elements.
  */
 typedef struct {
-    void* data;        /**< Pointer to raw memory */
-    dtype_t dtype;     /**< Element type */
-    int ndim;          /**< Number of dimensions */
-    int* shape;        /**< Array of dimension sizes */
-    size_t* strides;   /**< Array of strides (in bytes) */
-    size_t size;       /**< Total number of elements */
-    size_t bytes;      /**< Total memory size in bytes */
-    bool owns_data;    /**< True if tensor owns its memory */
+    void* data;      /**< Pointer to raw memory */
+    dtype_t dtype;   /**< Element type */
+    int ndim;        /**< Number of dimensions */
+    int* shape;      /**< Array of dimension sizes */
+    size_t* strides; /**< Array of strides (in bytes) */
+    size_t size;     /**< Total number of elements */
+    size_t bytes;    /**< Total memory size in bytes */
+    bool owns_data;  /**< True if tensor owns its memory */
 } tensor_t;
 
 /* ============================================================
@@ -131,4 +131,15 @@ bool tensor_is_contiguous(const tensor_t* t);
  */
 void tensor_print(const tensor_t* t);
 
-#endif // PHOBOSML_TENSOR_H
+#endif  // PHOBOSML_TENSOR_H
+
+/**
+ * @brief Compares two tensors for equality (metadata + data).
+ *
+ * Does not print anything. Intended for tests and debugging.
+ *
+ * @param a First tensor.
+ * @param b Second tensor.
+ * @return true if tensors are identical, false otherwise.
+ */
+bool tensor_compare(const tensor_t* a, const tensor_t* b);
