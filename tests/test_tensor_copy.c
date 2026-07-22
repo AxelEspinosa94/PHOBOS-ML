@@ -1,6 +1,7 @@
-#include "tensor.h"
 #include <stdio.h>
 #include <string.h>
+
+#include "tensor.h"
 
 int main(void) {
     int shape[2] = {2, 2};
