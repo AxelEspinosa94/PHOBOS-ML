@@ -2,7 +2,6 @@
 
 #include "tensor.h"
 
-
 int main(void) {
     int shape[2] = {2, 3};
 
