@@ -223,3 +223,50 @@ void tensor_print(const tensor_t* t) {
 
     printf("}\n");
 }
+
+bool tensor_compare(const tensor_t* a, const tensor_t* b) {
+    if (a == NULL || b == NULL) {
+        return false;
+    }
+
+    // Compare dtype
+    if (a->dtype != b->dtype) {
+        return false;
+    }
+
+    // Compare ndim
+    if (a->ndim != b->ndim) {
+        return false;
+    }
+
+    // Compare shape
+    for (int i = 0; i < a->ndim; ++i) {
+        if (a->shape[i] != b->shape[i]) {
+            return false;
+        }
+    }
+
+    // Compare strides
+    for (int i = 0; i < a->ndim; ++i) {
+        if (a->strides[i] != b->strides[i]) {
+            return false;
+        }
+    }
+
+    // Compare size
+    if (a->size != b->size) {
+        return false;
+    }
+
+    // Compare bytes
+    if (a->bytes != b->bytes) {
+        return false;
+    }
+
+    // Compare data contents
+    if (memcmp(a->data, b->data, a->bytes) != 0) {
+        return false;
+    }
+
+    return true;
+}
