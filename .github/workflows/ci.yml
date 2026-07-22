@@ -12,11 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debug repo layout
-        run: |
-          pwd
-          ls -la
-          find . -name ".clang-format"
+      #- name: Debug repo layout
+      #  run: |
+      #    clang-format-18 -style=file:.clang-format -dump-config
+      #    pwd
+      #    ls -la
+      #    find . -name ".clang-format"
 
       - name: Install clang-format
         run: sudo apt-get update && sudo apt-get install -y clang-format-18
@@ -26,7 +27,6 @@ jobs:
 
       - name: Check formatting
         run: |
-          clang-format-18 -style=file:.clang-format -dump-config
           clang-format-18 -style=file:.clang-format --dry-run --Werror \
             src/*.c include/*.h tests/*.c
 
@@ -39,8 +39,25 @@ jobs:
           gcc -c src/test_header.c -Iinclude
 
       - name: Build tests
-        run: make build/test_tensor
+        run: |
+          make build/test_tensor_create
+          make build/test_tensor_compare
+          make build/test_tensor_copy
+          make build/test_tensor_free
 
       - name: Run tests
-        run: ./build/test_tensor
-        
+        run: |
+          ./build/test_tensor_create
+          ./build/test_tensor_compare
+          ./build/test_tensor_copy
+          ./build/test_tensor_free
+
+      - name: Install valgrind
+        run: sudo apt-get install -y valgrind
+
+      - name: Memory check
+        run: |
+          valgrind --leak-check=full ./build/test_tensor_create
+          valgrind --leak-check=full ./build/test_tensor_compare
+          valgrind --leak-check=full ./build/test_tensor_copy
+          valgrind --leak-check=full ./build/test_tensor_free
