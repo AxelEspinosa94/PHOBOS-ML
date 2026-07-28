@@ -143,3 +143,12 @@ void tensor_print(const tensor_t* t);
  * @return true if tensors are identical, false otherwise.
  */
 bool tensor_compare(const tensor_t* a, const tensor_t* b);
+
+/**
+ * @brief Matrix multiplication: C = A × B
+ *
+ * @param A Left matrix (m × k)
+ * @param B Right matrix (k × n)
+ * @return tensor_t* Result matrix (m × n), or NULL on shape mismatch.
+ */
+tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B);
