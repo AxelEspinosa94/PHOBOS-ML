@@ -61,3 +61,14 @@ jobs:
           valgrind --leak-check=full ./build/test_tensor_compare
           valgrind --leak-check=full ./build/test_tensor_copy
           valgrind --leak-check=full ./build/test_tensor_free
+
+      - name: Build matmul tests
+        run: |
+          make build/test_matmul
+          make build/test_matmul_shape_error
+
+      - name: Run matmul tests
+        run: |
+          ./build/test_matmul
+          ./build/test_matmul_shape_error
+
