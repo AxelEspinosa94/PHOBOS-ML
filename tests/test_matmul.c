@@ -1,5 +1,6 @@
-#include "tensor.h"
 #include <stdio.h>
+
+#include "tensor.h"
 
 int main(void) {
     int A_shape[2] = {2, 3};
