@@ -1,3 +1,4 @@
+/* ops.c — PHOBOS-ML operations module */
 #include "tensor.h"
 #include <stdio.h>   // printf
 #include <stdlib.h>  // malloc, free
