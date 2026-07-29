@@ -1,5 +1,6 @@
-#include "tensor.h"
 #include <stdio.h>
+
+#include "tensor.h"
 
 int main(void) {
     int shape[1] = {3};
@@ -9,8 +10,12 @@ int main(void) {
     float* ad = (float*)A->data;
     float* bd = (float*)B->data;
 
-    ad[0] = 1.0f; ad[1] = 2.0f; ad[2] = 3.0f;
-    bd[0] = 4.0f; bd[1] = 5.0f; bd[2] = 6.0f;
+    ad[0] = 1.0f;
+    ad[1] = 2.0f;
+    ad[2] = 3.0f;
+    bd[0] = 4.0f;
+    bd[1] = 5.0f;
+    bd[2] = 6.0f;
 
     tensor_t* C_add = tensor_add(A, B);
     tensor_t* C_sub = tensor_sub(A, B);

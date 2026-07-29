@@ -1,5 +1,6 @@
-#include "tensor.h"
 #include <stdio.h>
+
+#include "tensor.h"
 
 int test_scalar_plus_tensor(void) {
     int shapeA[1] = {3};
@@ -11,7 +12,9 @@ int test_scalar_plus_tensor(void) {
     float* a = (float*)A->data;
     float* b = (float*)B->data;
 
-    a[0] = 1; a[1] = 2; a[2] = 3;
+    a[0] = 1;
+    a[1] = 2;
+    a[2] = 3;
     b[0] = 10;
 
     tensor_t* C = tensor_add(A, B);
@@ -41,7 +44,9 @@ int test_vector_plus_matrix(void) {
     for (int i = 0; i < 6; ++i) a[i] = i + 1;
 
     // B = [10,20,30]
-    b[0] = 10; b[1] = 20; b[2] = 30;
+    b[0] = 10;
+    b[1] = 20;
+    b[2] = 30;
 
     tensor_t* C = tensor_add(A, B);
     if (!C) return 1;
@@ -72,7 +77,9 @@ int test_row_vector_plus_matrix(void) {
 
     for (int i = 0; i < 6; ++i) a[i] = i + 1;
 
-    b[0] = 100; b[1] = 200; b[2] = 300;
+    b[0] = 100;
+    b[1] = 200;
+    b[2] = 300;
 
     tensor_t* C = tensor_add(A, B);
     if (!C) return 1;
@@ -100,7 +107,7 @@ int test_incompatible_shapes(void) {
     tensor_free(A);
     tensor_free(B);
 
-    return (C != NULL); // debe ser NULL → return 0
+    return (C != NULL);  // debe ser NULL → return 0
 }
 
 int main(void) {

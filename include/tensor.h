@@ -152,3 +152,24 @@ bool tensor_compare(const tensor_t* a, const tensor_t* b);
  * @return tensor_t* Result matrix (m × n), or NULL on shape mismatch.
  */
 tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B);
+
+/**
+ * @brief Element-wise addition: C = A + B
+ *
+ * Requires A and B to have same shape and dtype.
+ *
+ * @param A First tensor.
+ * @param B Second tensor.
+ * @return New tensor with result, or NULL on shape mismatch.
+ */
+tensor_t* tensor_add(const tensor_t* A, const tensor_t* B);
+
+/**
+ * @brief Element-wise subtraction: C = A - B
+ */
+tensor_t* tensor_sub(const tensor_t* A, const tensor_t* B);
+
+/**
+ * @brief Element-wise multiplication: C = A * B
+ */
+tensor_t* tensor_mul(const tensor_t* A, const tensor_t* B);

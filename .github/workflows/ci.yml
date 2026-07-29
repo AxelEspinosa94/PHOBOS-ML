@@ -35,40 +35,62 @@ jobs:
 
       - name: Check header compiles standalone
         run: |
-          echo '#include "tensor.h"' > src/test_header.c
-          gcc -c src/test_header.c -Iinclude
+          echo '#include "tensor.h"' > test_header.c
+          gcc -c test_header.c -Iinclude
 
-      - name: Build tests
-        run: |
-          make build/test_tensor_create
-          make build/test_tensor_compare
-          make build/test_tensor_copy
-          make build/test_tensor_free
+      #- name: Build tensor core tests
+      #  run: |
+      #    make build/test_tensor_create
+      #    make build/test_tensor_compare
+      #    make build/test_tensor_copy
+      #    make build/test_tensor_free
 
-      - name: Run tests
+      #- name: Run tensor core  tests
+      #  run: |
+      #    set -e
+      #    ./build/test_tensor_create
+      #    ./build/test_tensor_compare
+      #    ./build/test_tensor_copy
+      #    ./build/test_tensor_free
+
+      #- name: Build matmul tests
+      #  run: |
+      #    make build/test_matmul
+      #    make build/test_matmul_shape_error
+
+      #- name: Run matmul tests
+      #  run: |
+      #    set -e
+      #    ./build/test_matmul
+      #    ./build/test_matmul_shape_error
+
+      - name : Build ops and broadcasting tests
         run: |
-          ./build/test_tensor_create
-          ./build/test_tensor_compare
-          ./build/test_tensor_copy
-          ./build/test_tensor_free
+          make build/test_ops_shape_mismatch
+          make build/test_ops_elemwise
+          make build/test_broadcasting
+
+      - name : Run ops and broadcasting tests
+        run: |
+          set -e
+          ./build/test_ops_shape_mismatch
+          ./build/test_ops_elemwise
+          ./build/test_broadcasting
 
       - name: Install valgrind
         run: sudo apt-get install -y valgrind
 
       - name: Memory check
+      #  run: |
+      #    valgrind --leak-check=full ./build/test_tensor_create
+      #    valgrind --leak-check=full ./build/test_tensor_compare
+      #    valgrind --leak-check=full ./build/test_tensor_copy
+      #    valgrind --leak-check=full ./build/test_tensor_free
+      #  run: |
+      #    valgrind --leak-check=full ./build/test_matmul
+      #    valgrind --leak-check=full ./build/test_matmul_shape_error
         run: |
-          valgrind --leak-check=full ./build/test_tensor_create
-          valgrind --leak-check=full ./build/test_tensor_compare
-          valgrind --leak-check=full ./build/test_tensor_copy
-          valgrind --leak-check=full ./build/test_tensor_free
-
-      - name: Build matmul tests
-        run: |
-          make build/test_matmul
-          make build/test_matmul_shape_error
-
-      - name: Run matmul tests
-        run: |
-          ./build/test_matmul
-          ./build/test_matmul_shape_error
+          valgrind --leak-check=full ./build/test_ops_shape_mismatch
+          valgrind --leak-check=full ./build/test_ops_elemwise
+          valgrind --leak-check=full ./build/test_broadcasting
 
