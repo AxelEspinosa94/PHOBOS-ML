@@ -1,8 +1,9 @@
 /* ops.c — PHOBOS-ML operations module */
-#include "tensor.h"
 #include <stdio.h>   // printf
 #include <stdlib.h>  // malloc, free
 #include <string.h>  // memcpy
+
+#include "tensor.h"
 
 tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B) {
     if (!A || !B) return NULL;
