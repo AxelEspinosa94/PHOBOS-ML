@@ -173,3 +173,29 @@ tensor_t* tensor_sub(const tensor_t* A, const tensor_t* B);
  * @brief Element-wise multiplication: C = A * B
  */
 tensor_t* tensor_mul(const tensor_t* A, const tensor_t* B);
+
+/**
+ * @brief tensor creation from another one
+ */
+tensor_t* tensor_copy(const tensor_t* src);
+
+/**
+ * @brief ReLU activation: max(x, 0)
+ *
+ * Supports broadcasting.
+ */
+tensor_t* tensor_relu(const tensor_t* A);
+
+/**
+ * @brief Sigmoid activation: 1 / (1 + exp(-x))
+ *
+ * Numerically stable implementation.
+ */
+tensor_t* tensor_sigmoid(const tensor_t* A);
+
+/**
+ * @brief Softmax activation along the last dimension.
+ *
+ * Uses max-subtraction trick to avoid overflow.
+ */
+tensor_t* tensor_softmax(const tensor_t* A);

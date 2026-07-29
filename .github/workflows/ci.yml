@@ -64,18 +64,27 @@ jobs:
       #    ./build/test_matmul
       #    ./build/test_matmul_shape_error
 
-      - name : Build ops and broadcasting tests
-        run: |
-          make build/test_ops_shape_mismatch
-          make build/test_ops_elemwise
-          make build/test_broadcasting
+      #- name : Build ops and broadcasting tests
+      #  run: |
+      #    make build/test_ops_shape_mismatch
+      #    make build/test_ops_elemwise
+      #    make build/test_broadcasting
 
-      - name : Run ops and broadcasting tests
+      #- name : Run ops and broadcasting tests
+      #  run: |
+      #    set -e
+      #    ./build/test_ops_shape_mismatch
+      #    ./build/test_ops_elemwise
+      #    ./build/test_broadcasting
+
+      - name : Build activation tests
+        run: |
+          make build/test_activation
+
+      - name : Run activation tests
         run: |
           set -e
-          ./build/test_ops_shape_mismatch
-          ./build/test_ops_elemwise
-          ./build/test_broadcasting
+          ./build/test_activation
 
       - name: Install valgrind
         run: sudo apt-get install -y valgrind
@@ -89,8 +98,10 @@ jobs:
       #  run: |
       #    valgrind --leak-check=full ./build/test_matmul
       #    valgrind --leak-check=full ./build/test_matmul_shape_error
+      #  run: |
+      #    valgrind --leak-check=full ./build/test_ops_shape_mismatch
+      #    valgrind --leak-check=full ./build/test_ops_elemwise
+      #    valgrind --leak-check=full ./build/test_broadcasting
         run: |
-          valgrind --leak-check=full ./build/test_ops_shape_mismatch
-          valgrind --leak-check=full ./build/test_ops_elemwise
-          valgrind --leak-check=full ./build/test_broadcasting
+          valgrind --leak-check=full ./build/test_activation
 

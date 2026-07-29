@@ -12,17 +12,19 @@ INC_DIR := include
 CC := gcc
 CFLAGS := -Wall -Wextra -O2 -I$(INC_DIR)
 
+# Linker flags (math library)
+LDLIBS := -lm
+
 # Source files
 SRCS := $(wildcard $(SRC_DIR)/*.c)
 TESTS := $(wildcard $(TEST_DIR)/*.c)
 
 # Object files
 OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
+TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TESTS))
 
 # Remove main.o from engine objects for tests
 ENGINE_OBJS := $(filter-out $(BUILD_DIR)/main.o, $(OBJS))
-
-TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TESTS))
 
 # Binaries
 TARGET := $(BUILD_DIR)/phobosml
@@ -36,14 +38,14 @@ all: $(TARGET)
 # Main binary
 # ================================
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET)
+	$(CC) $(OBJS) -o $(TARGET) $(LDLIBS)
 
 # ================================
 # Test binaries (auto-detected)
 # ================================
 # Example: build/test_tensor
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
-	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$*
+	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS)
 
 # ================================
 # Generic compilation rules
