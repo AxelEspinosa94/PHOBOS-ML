@@ -142,15 +142,21 @@ static int broadcast_shapes(const tensor_t* A, const tensor_t* B,
 static void compute_broadcast_strides(const tensor_t* T,
                                       const int out_shape[],
                                       int out_ndim,
-                                      size_t* out_strides) {
+                                      size_t out_strides[]) {
     int offset = out_ndim - T->ndim;
 
     for (int i = 0; i < out_ndim; ++i) {
-        if (i < offset) {
-            out_strides[i] = 0;  // dimension added by broadcasting
+        int Ti = i - offset;
+
+        if (Ti < 0) {
+            // dimension added by broadcasting
+            out_strides[i] = 0;
+        } else if (T->shape[Ti] == 1) {
+            // broadcast dimension
+            out_strides[i] = 0;
         } else {
-            int Ti = i - offset;
-            out_strides[i] = (T->shape[Ti] == 1) ? 0 : T->strides[Ti];
+            // normal dimension
+            out_strides[i] = T->strides[Ti];
         }
     }
 }
