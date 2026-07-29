@@ -1,4 +1,5 @@
 #include "tensor.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -6,7 +7,7 @@ tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B) {
     if (!A || !B) return NULL;
 
     if (A->ndim != 2 || B->ndim != 2) {
-        return NULL; // Only 2D matmul supported for now
+        return NULL;// Only 2D matmul supported for now
     }
 
     int m = A->shape[0];
@@ -15,7 +16,7 @@ tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B) {
     int n = B->shape[1];
 
     if (kA != kB) {
-        return NULL; // Shape mismatch
+        return NULL;// Shape mismatch
     }
 
     int out_shape[2] = {m, n};
