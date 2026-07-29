@@ -156,11 +156,11 @@ tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B);
 /**
  * @brief Element-wise addition: C = A + B
  *
- * Requires A and B to have same shape and dtype.
+ * Supports NumPy-style broadcasting.
  *
  * @param A First tensor.
  * @param B Second tensor.
- * @return New tensor with result, or NULL on shape mismatch.
+ * @return New tensor with result, or NULL on incompatible shapes.
  */
 tensor_t* tensor_add(const tensor_t* A, const tensor_t* B);
 

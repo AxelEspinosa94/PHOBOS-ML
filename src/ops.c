@@ -5,11 +5,19 @@
 
 #include "tensor.h"
 
+/* =========================
+   MatMul (no broadcasting)
+   ========================= */
+
 tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B) {
     if (!A || !B) return NULL;
 
     if (A->ndim != 2 || B->ndim != 2) {
         return NULL;
+    }
+
+    if (A->dtype != DTYPE_FLOAT32 || B->dtype != DTYPE_FLOAT32) {
+        return NULL;  // por ahora solo soportamos float32
     }
 
     int m = A->shape[0];
@@ -42,9 +50,9 @@ tensor_t* tensor_matmul(const tensor_t* A, const tensor_t* B) {
     return C;
 }
 
-#include <stdlib.h>
-
-#include "tensor.h"
+/* =========================
+   Elemwise (same-shape helper)
+   ========================= */
 
 static int tensor_same_shape(const tensor_t* A, const tensor_t* B) {
     if (!A || !B) return 0;
@@ -56,70 +64,17 @@ static int tensor_same_shape(const tensor_t* A, const tensor_t* B) {
 }
 
 static tensor_t* tensor_elemwise_alloc_like(const tensor_t* A) {
-    int* shape = A->shape;  // ya está alocado en el tensor original
+    int* shape = A->shape;
     tensor_t* C = tensor_create(A->dtype, A->ndim, shape);
     return C;
 }
 
-tensor_t* tensor_add(const tensor_t* A, const tensor_t* B) {
-    if (!tensor_same_shape(A, B)) {
-        return NULL;
-    }
-
-    tensor_t* C = tensor_elemwise_alloc_like(A);
-    if (!C) return NULL;
-
-    float* ad = (float*)A->data;
-    float* bd = (float*)B->data;
-    float* cd = (float*)C->data;
-
-    for (size_t i = 0; i < A->size; ++i) {
-        cd[i] = ad[i] + bd[i];
-    }
-
-    return C;
-}
-
-tensor_t* tensor_sub(const tensor_t* A, const tensor_t* B) {
-    if (!tensor_same_shape(A, B)) {
-        return NULL;
-    }
-
-    tensor_t* C = tensor_elemwise_alloc_like(A);
-    if (!C) return NULL;
-
-    float* ad = (float*)A->data;
-    float* bd = (float*)B->data;
-    float* cd = (float*)C->data;
-
-    for (size_t i = 0; i < A->size; ++i) {
-        cd[i] = ad[i] - bd[i];
-    }
-
-    return C;
-}
-
-tensor_t* tensor_mul(const tensor_t* A, const tensor_t* B) {
-    if (!tensor_same_shape(A, B)) {
-        return NULL;
-    }
-
-    tensor_t* C = tensor_elemwise_alloc_like(A);
-    if (!C) return NULL;
-
-    float* ad = (float*)A->data;
-    float* bd = (float*)B->data;
-    float* cd = (float*)C->data;
-
-    for (size_t i = 0; i < A->size; ++i) {
-        cd[i] = ad[i] * bd[i];
-    }
-
-    return C;
-}
+/* =========================
+   Broadcasting helpers
+   ========================= */
 
 static int broadcast_shapes(const tensor_t* A, const tensor_t* B,
-                            int* out_shape, int* out_ndim) {
+                            int out_shape[], int* out_ndim) {
     int ndimA = A->ndim;
     int ndimB = B->ndim;
     int ndim = (ndimA > ndimB) ? ndimA : ndimB;
@@ -144,19 +99,17 @@ static void compute_broadcast_strides(const tensor_t* T,
                                       int out_ndim,
                                       size_t out_strides[]) {
     int offset = out_ndim - T->ndim;
+    size_t elem_size = tensor_dtype_size(T->dtype);
 
     for (int i = 0; i < out_ndim; ++i) {
         int Ti = i - offset;
 
         if (Ti < 0) {
-            // dimension added by broadcasting
             out_strides[i] = 0;
         } else if (T->shape[Ti] == 1) {
-            // broadcast dimension
             out_strides[i] = 0;
         } else {
-            // normal dimension
-            out_strides[i] = T->strides[Ti];
+            out_strides[i] = T->strides[Ti] / elem_size;  // <-- bytes -> elementos
         }
     }
 }
@@ -164,6 +117,12 @@ static void compute_broadcast_strides(const tensor_t* T,
 static tensor_t* tensor_elemwise_broadcast(
     const tensor_t* A, const tensor_t* B,
     float (*op)(float, float)) {
+    if (!A || !B) return NULL;
+
+    if (A->dtype != DTYPE_FLOAT32 || B->dtype != DTYPE_FLOAT32) {
+        return NULL;  // por ahora solo soportamos float32
+    }
+
     int out_shape[8];
     int out_ndim;
 
@@ -200,4 +159,24 @@ static tensor_t* tensor_elemwise_broadcast(
     }
 
     return C;
+}
+
+/* =========================
+   Public elemwise ops (with broadcasting)
+   ========================= */
+
+static float op_add(float a, float b) { return a + b; }
+static float op_sub(float a, float b) { return a - b; }
+static float op_mul(float a, float b) { return a * b; }
+
+tensor_t* tensor_add(const tensor_t* A, const tensor_t* B) {
+    return tensor_elemwise_broadcast(A, B, op_add);
+}
+
+tensor_t* tensor_sub(const tensor_t* A, const tensor_t* B) {
+    return tensor_elemwise_broadcast(A, B, op_sub);
+}
+
+tensor_t* tensor_mul(const tensor_t* A, const tensor_t* B) {
+    return tensor_elemwise_broadcast(A, B, op_mul);
 }

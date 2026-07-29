@@ -2,6 +2,31 @@
 
 #include "tensor.h"
 
+int test_matmul_dtype_mismatch(void) {
+    int A_shape[2] = {2, 3};
+    int B_shape[2] = {3, 2};
+
+    tensor_t* A = tensor_create(DTYPE_INT32, 2, A_shape);
+    tensor_t* B = tensor_create(DTYPE_FLOAT32, 2, B_shape);
+
+    if (!A || !B) {
+        printf("FAIL: dtype mismatch test setup (alloc failed)\n");
+        tensor_free(A);
+        tensor_free(B);
+        return 1;
+    }
+
+    tensor_t* C = tensor_matmul(A, B);
+
+    int failed = (C != NULL);  // debe ser NULL
+
+    tensor_free(A);
+    tensor_free(B);
+    tensor_free(C);  // tensor_free ya maneja NULL, no rompe nada
+
+    return failed;
+}
+
 int main(void) {
     int A_shape[2] = {2, 3};
     int B_shape[2] = {3, 2};
@@ -51,5 +76,13 @@ int main(void) {
     tensor_free(A);
     tensor_free(B);
     tensor_free(C);
+
+    if (test_matmul_dtype_mismatch()) {
+        printf("FAIL: matmul dtype mismatch (A=INT32) should return NULL\n");
+        return 1;
+    }
+
+    printf("PASS: matmul dtype mismatch\n");
+
     return 0;
 }
