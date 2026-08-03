@@ -199,3 +199,29 @@ tensor_t* tensor_sigmoid(const tensor_t* A);
  * Uses max-subtraction trick to avoid overflow.
  */
 tensor_t* tensor_softmax(const tensor_t* A);
+
+/**
+ * @brief Logistic Regression forward pass: sigmoid(XW + b)
+ *
+ * X: (m × n)
+ * W: (n × 1)
+ * b: (1 × 1) or (m × 1)
+ *
+ * @return Predictions (m × 1), or NULL on shape mismatch.
+ */
+tensor_t* tensor_logreg_forward(const tensor_t* X, const tensor_t* W, const tensor_t* b);
+
+/**
+ * @brief Sum of all elements in a tensor.
+ */
+float tensor_sum(const tensor_t* A);
+
+/**
+ * @brief Mean of all elements in a tensor.
+ */
+float tensor_mean(const tensor_t* A);
+
+/**
+ * @brief Max of all elements in a tensor.
+ */
+float tensor_max(const tensor_t* A);

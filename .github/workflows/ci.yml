@@ -77,14 +77,25 @@ jobs:
       #    ./build/test_ops_elemwise
       #    ./build/test_broadcasting
 
-      - name : Build activation tests
-        run: |
-          make build/test_activation
+      #- name : Build activation tests
+      #  run: |
+      #    make build/test_activation
 
-      - name : Run activation tests
+      #- name : Run activation tests
+      #  run: |
+      #    set -e
+      #    ./build/test_activation
+
+      - name: Build logreg tests
+        run: |
+          make build/test_logreg
+          make build/test_reductions
+
+      - name: Run logreg tests
         run: |
           set -e
-          ./build/test_activation
+          ./build/test_logreg
+          ./build/test_reductions
 
       - name: Install valgrind
         run: sudo apt-get install -y valgrind
@@ -102,6 +113,9 @@ jobs:
       #    valgrind --leak-check=full ./build/test_ops_shape_mismatch
       #    valgrind --leak-check=full ./build/test_ops_elemwise
       #    valgrind --leak-check=full ./build/test_broadcasting
+      #  run: |
+      #    valgrind --leak-check=full ./build/test_activation
         run: |
-          valgrind --leak-check=full ./build/test_activation
+          valgrind --leak-check=full ./build/test_logreg
+          valgrind --leak-check=full ./build/test_reductions
 
