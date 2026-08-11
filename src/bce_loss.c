@@ -1,4 +1,5 @@
 #include <math.h>
+
 #include "tensor.h"
 
 float tensor_bce_loss(const tensor_t* y, const tensor_t* p) {

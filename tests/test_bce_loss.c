@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+
 #include "tensor.h"
 
 int main(void) {
