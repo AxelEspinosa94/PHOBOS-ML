@@ -2,6 +2,10 @@ name: PHOBOS-ML CI
 
 on:
   push:
+    branches:
+      - dev
+      - qa
+      - main
   pull_request:
 
 jobs:
@@ -12,24 +16,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      #- name: Debug repo layout
-      #  run: |
-      #    clang-format-18 -style=file:.clang-format -dump-config
-      #    pwd
-      #    ls -la
-      #    find . -name ".clang-format"
-
       - name: Install clang-format
         run: sudo apt-get update && sudo apt-get install -y clang-format-18
 
       - name: Install build tools
         run: sudo apt-get install -y build-essential
 
+      # ============================
+      # LINT (runs on all branches)
+      # ============================
       - name: Check formatting
         run: |
           clang-format-18 -style=file:.clang-format --dry-run --Werror \
             src/*.c include/*.h tests/*.c
 
+      # ============================
+      # BUILD (runs on all branches)
+      # ============================
       - name: Build project
         run: make
 
@@ -38,84 +41,58 @@ jobs:
           echo '#include "tensor.h"' > test_header.c
           gcc -c test_header.c -Iinclude
 
-      #- name: Build tensor core tests
-      #  run: |
-      #    make build/test_tensor_create
-      #    make build/test_tensor_compare
-      #    make build/test_tensor_copy
-      #    make build/test_tensor_free
-
-      #- name: Run tensor core  tests
-      #  run: |
-      #    set -e
-      #    ./build/test_tensor_create
-      #    ./build/test_tensor_compare
-      #    ./build/test_tensor_copy
-      #    ./build/test_tensor_free
-
-      #- name: Build matmul tests
-      #  run: |
-      #    make build/test_matmul
-      #    make build/test_matmul_shape_error
-
-      #- name: Run matmul tests
-      #  run: |
-      #    set -e
-      #    ./build/test_matmul
-      #    ./build/test_matmul_shape_error
-
-      #- name : Build ops and broadcasting tests
-      #  run: |
-      #    make build/test_ops_shape_mismatch
-      #    make build/test_ops_elemwise
-      #    make build/test_broadcasting
-
-      #- name : Run ops and broadcasting tests
-      #  run: |
-      #    set -e
-      #    ./build/test_ops_shape_mismatch
-      #    ./build/test_ops_elemwise
-      #    ./build/test_broadcasting
-
-      #- name : Build activation tests
-      #  run: |
-      #    make build/test_activation
-
-      #- name : Run activation tests
-      #  run: |
-      #    set -e
-      #    ./build/test_activation
-
-      - name: Build logreg tests
+      # ============================
+      # TESTS (runs on all branches)
+      # ============================
+      - name: Build all tests
         run: |
-          make build/test_logreg
-          make build/test_reductions
+          for t in tests/test_*.c; do
+            name=$(basename "$t" .c)
+            make "build/$name"
+          done
 
-      - name: Run logreg tests
+      - name: Run all tests
         run: |
           set -e
-          ./build/test_logreg
-          ./build/test_reductions
+          for t in build/test_*; do
+            echo "Running $t"
+            "$t"
+          done
 
+      # ============================
+      # VALGRIND (dev + qa only)
+      # ============================
       - name: Install valgrind
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa'
         run: sudo apt-get install -y valgrind
 
-      - name: Memory check
-      #  run: |
-      #    valgrind --leak-check=full ./build/test_tensor_create
-      #    valgrind --leak-check=full ./build/test_tensor_compare
-      #    valgrind --leak-check=full ./build/test_tensor_copy
-      #    valgrind --leak-check=full ./build/test_tensor_free
-      #  run: |
-      #    valgrind --leak-check=full ./build/test_matmul
-      #    valgrind --leak-check=full ./build/test_matmul_shape_error
-      #  run: |
-      #    valgrind --leak-check=full ./build/test_ops_shape_mismatch
-      #    valgrind --leak-check=full ./build/test_ops_elemwise
-      #    valgrind --leak-check=full ./build/test_broadcasting
-      #  run: |
-      #    valgrind --leak-check=full ./build/test_activation
+      - name: Memory check (all tests)
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa'
         run: |
-          valgrind --leak-check=full ./build/test_logreg
-          valgrind --leak-check=full ./build/test_reductions
+          for t in build/test_*; do
+            echo "Valgrind $t"
+            valgrind --leak-check=full "$t"
+          done
 
+      # ============================
+      # COVERAGE (qa only)
+      # ============================
+      - name: Install gcov/lcov
+        if: github.ref == 'refs/heads/qa'
+        run: sudo apt-get install -y lcov
+
+      - name: Coverage
+        if: github.ref == 'refs/heads/qa'
+        run: |
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --list coverage.info
+
+      # ============================
+      # RELEASE (main only)
+      # ============================
+      - name: Prepare release artifact
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p release
+          cp build/phobosml release/
