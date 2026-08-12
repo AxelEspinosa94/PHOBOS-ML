@@ -239,3 +239,29 @@ float tensor_max(const tensor_t* A);
  * @return   Scalar loss (float)
  */
 float tensor_bce_loss(const tensor_t* y, const tensor_t* p);
+
+/**
+ * @brief Compute gradients for logistic regression.
+ *
+ * Given:
+ *   y_hat = sigmoid(XW + b)
+ *
+ * Gradients:
+ *   dW = X^T (y_hat - y)
+ *   db = sum(y_hat - y)
+ *
+ * Shapes:
+ *   X: (m × n)
+ *   y: (m × 1)
+ *   y_hat: (m × 1)
+ *   dW: (n × 1)
+ *   db: scalar (float)
+ *
+ * @return 0 on success, non-zero on error.
+ */
+int tensor_logreg_gradients(
+    const tensor_t* X,
+    const tensor_t* y,
+    const tensor_t* y_hat,
+    tensor_t** dW_out,
+    float* db_out);
