@@ -225,3 +225,17 @@ float tensor_mean(const tensor_t* A);
  * @brief Max of all elements in a tensor.
  */
 float tensor_max(const tensor_t* A);
+
+/**
+ * @brief Binary Cross-Entropy loss (mean reduction).
+ *
+ * Computes:
+ *   BCE = -mean( y*log(p) + (1-y)*log(1-p) )
+ *
+ * Stable for extreme values using clamping.
+ *
+ * @param y  Ground truth labels (m × 1)
+ * @param p  Predictions (m × 1), output of sigmoid
+ * @return   Scalar loss (float)
+ */
+float tensor_bce_loss(const tensor_t* y, const tensor_t* p);
