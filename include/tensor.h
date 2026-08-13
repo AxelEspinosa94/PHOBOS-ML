@@ -225,3 +225,72 @@ float tensor_mean(const tensor_t* A);
  * @brief Max of all elements in a tensor.
  */
 float tensor_max(const tensor_t* A);
+
+/**
+ * @brief Binary Cross-Entropy loss (mean reduction).
+ *
+ * Computes:
+ *   BCE = -mean( y*log(p) + (1-y)*log(1-p) )
+ *
+ * Stable for extreme values using clamping.
+ *
+ * @param y  Ground truth labels (m × 1)
+ * @param p  Predictions (m × 1), output of sigmoid
+ * @return   Scalar loss (float)
+ */
+float tensor_bce_loss(const tensor_t* y, const tensor_t* p);
+
+/**
+ * @brief Compute gradients for logistic regression.
+ *
+ * Given:
+ *   y_hat = sigmoid(XW + b)
+ *
+ * Gradients:
+ *   dW = X^T (y_hat - y)
+ *   db = sum(y_hat - y)
+ *
+ * Shapes:
+ *   X: (m × n)
+ *   y: (m × 1)
+ *   y_hat: (m × 1)
+ *   dW: (n × 1)
+ *   db: scalar (float)
+ *
+ * @return 0 on success, non-zero on error.
+ */
+int tensor_logreg_gradients(
+    const tensor_t* X,
+    const tensor_t* y,
+    const tensor_t* y_hat,
+    tensor_t** dW_out,
+    float* db_out);
+
+/**
+ * @brief Perform a single SGD training step for logistic regression.
+ *
+ * Computes:
+ *   y_hat = sigmoid(XW + b)
+ *   loss  = BCE(y, y_hat)
+ *   dW, db = gradients
+ *
+ * Updates:
+ *   W := W - lr * dW
+ *   b := b - lr * db
+ *
+ * @param X   Input matrix (m × n)
+ * @param y   Labels (m × 1)
+ * @param W   Weights (n × 1) — updated in-place
+ * @param b   Bias (scalar) — updated in-place
+ * @param lr  Learning rate
+ * @param loss_out  Output loss (float)
+ *
+ * @return 0 on success, non-zero on error.
+ */
+int tensor_logreg_train_step(
+    const tensor_t* X,
+    const tensor_t* y,
+    tensor_t* W,
+    float* b,
+    float lr,
+    float* loss_out);
