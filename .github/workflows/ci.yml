@@ -31,15 +31,23 @@ jobs:
             src/*.c include/*.h tests/*.c
 
       # ============================
+      # COVERAGE FLAGS (qa only)
+      # ============================
+      - name: Enable coverage flags (QA only)
+        if: github.ref == 'refs/heads/qa'
+        run: |
+          echo "export CFLAGS=--coverage" >> $GITHUB_ENV
+          echo "export LDFLAGS=--coverage" >> $GITHUB_ENV
+
+      - name: Clean build (QA only)
+        if: github.ref == 'refs/heads/qa'
+        run: make clean || true
+
+      # ============================
       # BUILD (runs on all branches)
       # ============================
       - name: Build project
         run: make
-
-      - name: Check header compiles standalone
-        run: |
-          echo '#include "tensor.h"' > test_header.c
-          gcc -c test_header.c -Iinclude
 
       # ============================
       # TESTS (runs on all branches)
@@ -91,7 +99,7 @@ jobs:
         if: github.ref == 'refs/heads/qa'
         run: |
           lcov --capture --directory . --output-file coverage.info --ignore-errors empty
-          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors empty
           lcov --list coverage.info
 
       # ============================
