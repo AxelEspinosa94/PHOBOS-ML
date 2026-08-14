@@ -20,11 +20,9 @@ SRCS := $(wildcard $(SRC_DIR)/*.c)
 TESTS := $(wildcard $(TEST_DIR)/*.c)
 
 # Object files
-OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
-TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TESTS))
-
-# Remove main.o from engine objects for tests
-ENGINE_OBJS := $(filter-out $(BUILD_DIR)/main.o, $(OBJS))
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/src_%.o, $(SRCS))
+TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/test_%.o, $(TESTS))
+ENGINE_OBJS := $(filter-out $(BUILD_DIR)/src_main.o, $(OBJS))
 
 # Binaries
 TARGET := $(BUILD_DIR)/phobosml
@@ -45,16 +43,18 @@ $(TARGET): $(OBJS)
 # ================================
 # Example: build/test_tensor
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
-	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
+    $(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
 
 # ================================
 # Generic compilation rules
 # ================================
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Engine objects
+$(BUILD_DIR)/src_%.o: $(SRC_DIR)/%.c
+    $(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Test objects
+$(BUILD_DIR)/test_%.o: $(TEST_DIR)/%.c
+    $(CC) $(CFLAGS) -c $< -o $@
 
 # ================================
 # Formatting
