@@ -38,14 +38,14 @@ all: $(TARGET)
 # Main binary
 # ================================
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET) $(LDLIBS) $(LDFLAGS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDLIBS)
 
 # ================================
 # Test binaries (auto-detected)
 # ================================
 # Example: build/test_tensor
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
-	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
+	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS)
 
 # ================================
 # Generic compilation rules
