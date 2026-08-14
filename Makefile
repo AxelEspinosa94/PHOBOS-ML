@@ -49,11 +49,11 @@ $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
 # Generic compilation rules
 # ================================
 # Engine objects
-$(BUILD_DIR)/src_%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Test objects
-$(BUILD_DIR)/test_%.o: $(TEST_DIR)/%.c
+$(BUILD_DIR)/%.o: $(TEST_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # ================================
