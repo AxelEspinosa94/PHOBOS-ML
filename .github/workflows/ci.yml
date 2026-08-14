@@ -33,11 +33,15 @@ jobs:
       # ============================
       # COVERAGE FLAGS (qa only)
       # ============================
+      - name: Debug coverage env
+        if: github.ref == 'refs/heads/qa'
+        run: echo "CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS"
+
       - name: Enable coverage flags (QA only)
         if: github.ref == 'refs/heads/qa'
         run: |
-          echo "export CFLAGS=--coverage" >> $GITHUB_ENV
-          echo "export LDFLAGS=--coverage" >> $GITHUB_ENV
+          echo "CFLAGS=--coverage" >> $GITHUB_ENV
+          echo "LDFLAGS=--coverage" >> $GITHUB_ENV
 
       - name: Clean build (QA only)
         if: github.ref == 'refs/heads/qa'
@@ -85,12 +89,6 @@ jobs:
       # ============================
       # COVERAGE (qa only)
       # ============================
-      - name: Enable coverage flags (QA only)
-        if: github.ref == 'refs/heads/qa'
-        run: |
-          echo "CFLAGS += --coverage" >> Makefile
-          echo "LDFLAGS += --coverage" >> Makefile
-
       - name: Install gcov/lcov
         if: github.ref == 'refs/heads/qa'
         run: sudo apt-get install -y lcov
