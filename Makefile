@@ -10,7 +10,7 @@ INC_DIR := include
 
 # Compiler
 CC := gcc
-CFLAGS := -Wall -Wextra -O2 -I$(INC_DIR)
+CFLAGS += -Wall -Wextra -O2 -I$(INC_DIR)
 
 # Linker flags (math library)
 LDLIBS := -lm
@@ -38,14 +38,14 @@ all: $(TARGET)
 # Main binary
 # ================================
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET) $(LDLIBS)
+	$(CC) $(OBJS) -o $(TARGET) $(LDLIBS) $(LDFLAGS)
 
 # ================================
 # Test binaries (auto-detected)
 # ================================
 # Example: build/test_tensor
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
-	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS)
+	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
 
 # ================================
 # Generic compilation rules
