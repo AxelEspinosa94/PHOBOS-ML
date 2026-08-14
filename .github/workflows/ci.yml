@@ -85,6 +85,12 @@ jobs:
       # ============================
       # COVERAGE (qa only)
       # ============================
+      - name: Enable coverage flags (QA only)
+        if: github.ref == 'refs/heads/qa'
+        run: |
+          echo "CFLAGS += --coverage" >> Makefile
+          echo "LDFLAGS += --coverage" >> Makefile
+
       - name: Install gcov/lcov
         if: github.ref == 'refs/heads/qa'
         run: sudo apt-get install -y lcov
