@@ -43,18 +43,18 @@ $(TARGET): $(OBJS)
 # ================================
 # Example: build/test_tensor
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(ENGINE_OBJS)
-    $(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
+	$(CC) $(BUILD_DIR)/test_$*.o $(ENGINE_OBJS) -o $(BUILD_DIR)/test_$* $(LDLIBS) $(LDFLAGS)
 
 # ================================
 # Generic compilation rules
 # ================================
 # Engine objects
 $(BUILD_DIR)/src_%.o: $(SRC_DIR)/%.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # Test objects
 $(BUILD_DIR)/test_%.o: $(TEST_DIR)/%.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 # ================================
 # Formatting
