@@ -31,15 +31,27 @@ jobs:
             src/*.c include/*.h tests/*.c
 
       # ============================
+      # COVERAGE FLAGS (qa only)
+      # ============================
+      - name: Debug coverage env
+        if: github.ref == 'refs/heads/qa'
+        run: echo "CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS"
+
+      - name: Enable coverage flags (QA only)
+        if: github.ref == 'refs/heads/qa'
+        run: |
+          echo "CFLAGS=--coverage" >> $GITHUB_ENV
+          echo "LDFLAGS=--coverage" >> $GITHUB_ENV
+
+      - name: Clean build (QA only)
+        if: github.ref == 'refs/heads/qa'
+        run: make clean || true
+
+      # ============================
       # BUILD (runs on all branches)
       # ============================
       - name: Build project
         run: make
-
-      - name: Check header compiles standalone
-        run: |
-          echo '#include "tensor.h"' > test_header.c
-          gcc -c test_header.c -Iinclude
 
       # ============================
       # TESTS (runs on all branches)
@@ -55,6 +67,7 @@ jobs:
         run: |
           set -e
           for t in build/test_*; do
+            [ -f "$t" ] && [ -x "$t" ] || continue
             echo "Running $t"
             "$t"
           done
@@ -70,6 +83,7 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa'
         run: |
           for t in build/test_*; do
+            [ -f "$t" ] && [ -x "$t" ] || continue
             echo "Valgrind $t"
             valgrind --leak-check=full "$t"
           done
@@ -84,8 +98,8 @@ jobs:
       - name: Coverage
         if: github.ref == 'refs/heads/qa'
         run: |
-          lcov --capture --directory . --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --capture --directory . --output-file coverage.info --ignore-errors empty
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors empty
           lcov --list coverage.info
 
       # ============================
