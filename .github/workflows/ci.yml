@@ -67,6 +67,7 @@ jobs:
         run: |
           set -e
           for t in build/test_*; do
+            [ -f "$t" ] && [ -x "$t" ] || continue
             echo "Running $t"
             "$t"
           done
@@ -82,6 +83,7 @@ jobs:
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/qa'
         run: |
           for t in build/test_*; do
+            [ -f "$t" ] && [ -x "$t" ] || continue
             echo "Valgrind $t"
             valgrind --leak-check=full "$t"
           done
