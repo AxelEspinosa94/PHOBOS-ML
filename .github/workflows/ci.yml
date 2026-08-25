@@ -6,7 +6,15 @@ on:
       - dev
       - qa
       - main
+      - feature/**
+      - fix/**
   pull_request:
+    branches:
+      - dev
+      - qa
+      - main
+      - feature/**
+      - fix/**
 
 jobs:
   build:
