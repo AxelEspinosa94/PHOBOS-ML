@@ -107,10 +107,10 @@ in the Software without restriction...
 
 ## 🧩 Roadmap
 
-- [ ] Implement `tensor.c` (core tensor structure)
-- [ ] Add basic operations (MatMul, ReLU, Softmax)
-- [ ] Implement Logistic Regression model
-- [ ] Add SGD optimizer
+- [X] Implement `tensor.c` (core tensor structure)
+- [X] Add basic operations (MatMul, ReLU, Softmax)
+- [X] Implement Logistic Regression model
+- [X] Add SGD optimizer
 - [ ] Build shared library `.so` for Python bindings
 - [ ] Create JNI wrapper for Java
 - [ ] Integrate with Spark MLlib (Transformer + Estimator)
