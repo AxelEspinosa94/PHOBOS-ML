@@ -82,7 +82,7 @@ lib: $(ENGINE_OBJS)
 shared: clean
 shared: CFLAGS += -fPIC
 shared: $(ENGINE_OBJS)
-    $(CC) -shared -o $(BUILD_DIR)/libphobosml.so $(ENGINE_OBJS)
+	$(CC) -shared -o $(BUILD_DIR)/libphobosml.so $(ENGINE_OBJS)
 
 
 # ============================
