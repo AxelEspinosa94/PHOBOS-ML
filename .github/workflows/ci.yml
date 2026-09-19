@@ -39,6 +39,12 @@ jobs:
             src/*.c include/*.h tests/*.c
 
       # ============================
+      # Build Static Library (runs on all branches)
+      # ============================
+      - name: Build static library
+        run: make lib
+
+      # ============================
       # COVERAGE FLAGS (qa only)
       # ============================
       - name: Debug coverage env
