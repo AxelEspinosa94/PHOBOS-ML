@@ -69,3 +69,9 @@ clean:
 	rm -f $(BUILD_DIR)/*.o
 	rm -f $(TARGET)
 	rm -f $(BUILD_DIR)/test_*
+
+# ================================
+# Static library
+# ================================
+lib: $(ENGINE_OBJS)
+	ar rcs $(BUILD_DIR)/libphobosml.a $(ENGINE_OBJS)
