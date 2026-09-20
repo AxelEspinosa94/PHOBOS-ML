@@ -31,7 +31,7 @@ jobs:
         run: sudo apt-get install -y build-essential
 
       # ============================
-      # LINT (runs on all branches)
+      # LINT
       # ============================
       - name: Check formatting
         run: |
@@ -39,18 +39,20 @@ jobs:
             src/*.c include/*.h tests/*.c
 
       # ============================
-      # Build Static Library (runs on all branches)
+      # STATIC LIB
       # ============================
       - name: Build static library
         run: make lib
 
       # ============================
+      # SHARED LIB
+      # ============================
+      - name: Build shared library
+        run: make shared
+
+      # ============================
       # COVERAGE FLAGS (qa only)
       # ============================
-      - name: Debug coverage env
-        if: github.ref == 'refs/heads/qa'
-        run: echo "CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS"
-
       - name: Enable coverage flags (QA only)
         if: github.ref == 'refs/heads/qa'
         run: |
@@ -62,13 +64,13 @@ jobs:
         run: make clean || true
 
       # ============================
-      # BUILD (runs on all branches)
+      # BUILD
       # ============================
       - name: Build project
         run: make
 
       # ============================
-      # TESTS (runs on all branches)
+      # TESTS
       # ============================
       - name: Build all tests
         run: |
@@ -124,3 +126,46 @@ jobs:
         run: |
           mkdir -p release
           cp build/phobosml release/
+
+  # ───────────────────────────────────────────────
+  # AUTO-TAGGING — PATCH or MINOR based on PR label
+  # ───────────────────────────────────────────────
+  auto-tag:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' &&
+        github.event.pull_request.merged == true &&
+        startsWith(github.ref, 'refs/heads/main')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine tag type
+        id: tagtype
+        run: |
+          if echo "${{ github.event.pull_request.labels }}" | grep -q "release:minor"; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+          else
+            echo "type=patch" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Compute next version
+        id: version
+        run: |
+          CURRENT=$(git describe --tags --abbrev=0)
+          BASE=${CURRENT#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$BASE"
+
+          if [ "${{ steps.tagtype.outputs.type }}" = "minor" ]; then
+            MINOR=$((MINOR+1))
+            PATCH=0
+          else
+            PATCH=$((PATCH+1))
+          fi
+
+          echo "next=v${MAJOR}.${MINOR}.${PATCH}" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        run: |
+          git tag -a "${{ steps.version.outputs.next }}" -m "Release ${{ steps.version.outputs.next }}"
+          git push origin "${{ steps.version.outputs.next }}"
