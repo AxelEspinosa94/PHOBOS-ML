@@ -22,6 +22,7 @@ build/*
 !build/.gitkeep
 bin/
 dist/
+roadmap_post_v0.1.0.md
 
 # ============================
 # Make / CMake
