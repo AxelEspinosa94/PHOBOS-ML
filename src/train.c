@@ -1,5 +1,8 @@
+#include "train.h"
+
 #include <stdlib.h>
 
+#include "optimizer.h"
 #include "tensor.h"
 
 int tensor_logreg_train_step(
@@ -49,6 +52,65 @@ int tensor_logreg_train_step(
     *b -= lr * db;
 
     tensor_free(dW);
+
+    return 0;
+}
+
+int train_loop(
+    const tensor_t* X,
+    const tensor_t* y,
+    tensor_t* W,
+    float* b,
+    float lr,
+    int epochs) {
+    if (!X || !y || !W || !b)
+        return -1;
+
+    for (int epoch = 0; epoch < epochs; ++epoch) {
+        tensor_t* y_hat =
+            tensor_logreg_forward(X, W, NULL);
+
+        if (!y_hat)
+            return -2;
+
+        float loss =
+            tensor_bce_loss(y, y_hat);
+
+        tensor_t* dW = NULL;
+        float db = 0.0f;
+
+        int err =
+            tensor_logreg_gradients(
+                X,
+                y,
+                y_hat,
+                &dW,
+                &db);
+
+        tensor_free(y_hat);
+
+        if (err != 0)
+            return -3;
+
+        err =
+            optimizer_sgd_step(
+                W,
+                b,
+                dW,
+                db,
+                lr);
+
+        tensor_free(dW);
+
+        if (err != 0)
+            return -4;
+
+        printf(
+            "[Epoch %d/%d] Loss = %.6f\n",
+            epoch + 1,
+            epochs,
+            loss);
+    }
 
     return 0;
 }
