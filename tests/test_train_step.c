@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "tensor.h"
+#include "train.h"
 
 int main(void) {
     // X: 2×2
