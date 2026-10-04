@@ -4,11 +4,19 @@
 # PHOBOS-ML Project
 
 # PHOBOS Machine Learning Engine  
-[![Language](https://img.shields.io/badge/language-C-blue.svg)]()
-[![Build](https://img.shields.io/badge/build-Makefile-orange.svg)]()
-[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL2-green.svg)]()
-[![License](https://img.shields.io/badge/license-MIT-yellow.svg)]()
-[![Status](https://img.shields.io/badge/status-Active-success.svg)]()
+[![CI](https://github.com/AxelEspinosa94/PHOBOS-ML/actions/workflows/ci.yml/badge.svg)](https://github.com/AxelEspinosa94/PHOBOS-ML/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/github/v/tag/AxelEspinosa94/PHOBOS-ML?label=version)]()
+![Coverage](https://img.shields.io/badge/coverage-lcov-blue.svg)
+![Valgrind](https://img.shields.io/badge/memory%20check-valgrind-critical.svg)
+![Static Library](https://img.shields.io/badge/library-.a-blue.svg)
+![Shared Library](https://img.shields.io/badge/library-.so-green.svg)
+![Auto Tagging](https://img.shields.io/badge/release-auto--tagging-purple.svg)
+![Tests](https://img.shields.io/badge/tests-automated-success.svg)
+![Language](https://img.shields.io/badge/language-C-blue.svg)
+![Build](https://img.shields.io/badge/build-Makefile-orange.svg)
+![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20WSL2-green.svg)
+![License](https://img.shields.io/badge/license-MIT-yellow.svg)
+![Status](https://img.shields.io/badge/status-Active-success.svg)
 
 PHOBOS-ML is a lightweight **Machine Learning engine written in pure C**, designed with a focus on:
 
@@ -81,8 +89,7 @@ make clean
 Example (manual compilation):
 
 ```bash
-gcc tests/test_tensor.c src/tensor.c -Iinclude -o test_tensor
-./test_tensor
+make build/test_tensor.c
 ```
 
 You may add a full test runner later.
@@ -111,7 +118,7 @@ in the Software without restriction...
 - [X] Add basic operations (MatMul, ReLU, Softmax)
 - [X] Implement Logistic Regression model
 - [X] Add SGD optimizer
-- [ ] Build shared library `.so` for Python bindings
+- [X] Build shared library `.so` for Python bindings
 - [ ] Create JNI wrapper for Java
 - [ ] Integrate with Spark MLlib (Transformer + Estimator)
 - [ ] Add benchmarks and profiling tools
